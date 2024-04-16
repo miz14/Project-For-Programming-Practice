@@ -16,7 +16,7 @@ import matplotlib.pyplot as plt
 matplotlib.use("Agg")
 
 pygame.init()
-screen = pygame.display.set_mode((800, 800))
+screen = pygame.display.set_mode(size=(640, 480))
 pygame.display.set_caption("Умный муравей")
 clock = pygame.time.Clock()
 
@@ -37,6 +37,7 @@ def get_image(observ):
     renderer = canvas.get_renderer()
     raw_data = renderer.tostring_rgb()
     size = canvas.get_width_height()
+    print(size)
     surf = pygame.image.fromstring(raw_data, size, "RGB")
     return surf
 
