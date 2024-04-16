@@ -1,0 +1,7 @@
+pygame
+gym[atari]
+ale-py
+autorom[accept-rom-license]
+matplotlib
+numpy
+gym
