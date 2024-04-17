@@ -1,8 +1,10 @@
 # Project-For-Programming-Practice
 
-Создать окружение
+Требуется наличие openssl
+
+Создать окружение python 3.11
 ```
-python -m venv venv
+python -3.11 -m venv venv
 venv\Scripts\activate
 pip install -r req.txt
 ```

@@ -1,0 +1,5 @@
+
+
+gym
+gym[atari]
+autorom[accept-rom-license]
