@@ -1,4 +1,7 @@
+numpy
+matplotlib
 
+pygame
 
 gym
 gym[atari]
