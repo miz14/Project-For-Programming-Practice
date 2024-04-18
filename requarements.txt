@@ -5,3 +5,6 @@ autorom[accept-rom-license]
 matplotlib
 numpy
 gym
+torch
+torchvision
+tensorflow
