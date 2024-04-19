@@ -1,3 +1,4 @@
+import cv2
 import pygame
 from breakout import Breakout
 import matplotlib.backends.backend_agg as agg
@@ -16,7 +17,6 @@ FPS = 30
 env = Breakout()
 
 observation, info = env.reset()
-
 env.rec()
 
 def get_image(observ):
@@ -35,21 +35,17 @@ def get_image(observ):
 running = True
 
 lives = 5
-sd = 0
 while running:
     clock.tick(FPS)
     
     surf = get_image(observation)
     screen.blit(surf, dest = (0,0))
     action = env.get_best_action(observation)
-    print(action)
+    pre_obs = observation
     observation, reward, terminated, truncated, info = env.step(action)
     env.render()
     if terminated:
-        sd += 1
         observation, info = env.reset()
-    if sd == 3:
-        running = False
     pressed = pygame.key.get_pressed()
 
     for event in pygame.event.get():
