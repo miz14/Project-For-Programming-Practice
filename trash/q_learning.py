@@ -1,5 +1,4 @@
 import torch
-from encoder import ImageEncoder
 import random
 
 def gen_epsilon_greedy_policy(estimator, epsilon, n_action):
@@ -12,8 +11,7 @@ def gen_epsilon_greedy_policy(estimator, epsilon, n_action):
          return action
      return policy_function
 
-def q_learning(env, estimator, n_episode, n_action, gamma = 1.0, epsilon = 0.1, epsilon_decay=0.99):
-    encoder = ImageEncoder()
+def q_learning(env,encoder, estimator, n_episode, n_action, gamma = 1.0, epsilon = 0.1, epsilon_decay=0.99):
     total_reward_episode = [0] * n_episode
     for episode in range(n_episode):
         policy = gen_epsilon_greedy_policy(estimator, epsilon * epsilon_decay ** episode, n_action)
@@ -23,7 +21,9 @@ def q_learning(env, estimator, n_episode, n_action, gamma = 1.0, epsilon = 0.1, 
         state = output_value
         is_done = False
         action_count = 0
+        lives = 5
         while not is_done:
+            is_dead = False
             action_count += 1
             if random.uniform(0, 1) < epsilon:
                 action =  env.action_space.sample()
@@ -35,7 +35,10 @@ def q_learning(env, estimator, n_episode, n_action, gamma = 1.0, epsilon = 0.1, 
             next_state = output_value
             q_values_next = estimator.predict(next_state)
             td_target = reward + gamma * torch.max(q_values_next)
-            estimator.update(state, action, td_target)
+            if info["lives"] < lives:
+                lives -= 1
+                is_dead = True
+            estimator.update(state, action, td_target, is_dead)
             total_reward_episode[episode] += reward
             if is_done:
                 break

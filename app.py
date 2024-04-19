@@ -1,21 +1,9 @@
-import gym
-
 import pygame
-
+from breakout import Breakout
 import matplotlib.backends.backend_agg as agg
-
 import matplotlib
-
 import pylab
-
 import matplotlib.pyplot as plt
-import torch
-
-from encoder import ImageEncoder
-from estimator import Estimator
-from q_learning import q_learning
-
-
 matplotlib.use("Agg")
 
 pygame.init()
@@ -25,10 +13,11 @@ clock = pygame.time.Clock()
 
 FPS = 30
 
-env = gym.make("ALE/Breakout-v5")
+env = Breakout()
 
 observation, info = env.reset()
 
+env.rec()
 
 def get_image(observ):
     fig = pylab.figure()
@@ -44,44 +33,23 @@ def get_image(observ):
     return surf
 
 running = True
-num_actions = env.action_space.n
 
-env.step(1)
 lives = 5
-
-encoder = ImageEncoder()
-
-n_state = 32
-n_action = env.action_space.n
-n_feature = 200
-n_hidden = 50
-lr = 0.001
-
-estimator = Estimator(n_feature, n_state, n_action, n_hidden, lr)
-
-estimator.load('trained_model.pth')
-
+sd = 0
 while running:
     clock.tick(FPS)
+    
     surf = get_image(observation)
     screen.blit(surf, dest = (0,0))
-
-    input_image = observation 
-    output_value = encoder(input_image)
-    observation = output_value
-
-    q_values = estimator.predict(observation)
-    action = torch.argmax(q_values)
-
-    observation, reward, terminated, truncated, info = env.step(action.item())
-
-    if info["lives"] < lives:
-        lives -= 1
-        observation, reward, terminated, truncated, info = env.step(1)
+    action = env.get_best_action(observation)
+    print(action)
+    observation, reward, terminated, truncated, info = env.step(action)
+    env.render()
     if terminated:
-        lives = 5
+        sd += 1
         observation, info = env.reset()
-        observation, reward, terminated, truncated, info = env.step(1)
+    if sd == 3:
+        running = False
     pressed = pygame.key.get_pressed()
 
     for event in pygame.event.get():
@@ -92,3 +60,4 @@ while running:
                 running = False
 
     pygame.display.flip()
+env.stop_rec()

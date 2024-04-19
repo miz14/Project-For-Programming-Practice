@@ -28,12 +28,14 @@ class Estimator():
         features = (2.0 / self.n_feat) ** 0.5 * torch.cos(torch.matmul(torch.tensor(s).float(), self.w) + self.b)
         return features
 
-    def update(self, s, a, y):
+    def update(self, s, a, y, is_dead):
         features = Variable(self.get_feature(s))
         y_pred = self.models[a](features)
 
-        loss = self.criterion(y_pred, Variable(torch.tensor([y])))
-
+        if is_dead:
+            loss = self.criterion(y_pred, Variable(torch.tensor([y]))) + 500
+        else:
+            loss = self.criterion(y_pred, Variable(torch.tensor([y])))
         self.optimizers[a].zero_grad()
         loss.backward()
         self.optimizers[a].step()
