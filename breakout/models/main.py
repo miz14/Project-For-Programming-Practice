@@ -124,7 +124,7 @@ class Breakout:
         next_state = self.get_features(next_img)
         return next_state, reward, is_done, trancation, next_img, info
 
-memory = deque(maxlen=300)
+memory = deque(maxlen=1000)
 
 env = Breakout()
 state, img, info = env.reset()
@@ -132,13 +132,15 @@ state, img, info = env.reset()
 n_action = env.action_space
 
 n_feature = 100
-n_hidden = 10
-lr = 1e-5
+n_hidden = 40
+lr = 1e-4
 estimator = Estimator(n_feature, n_hidden, n_state=3, n_action=3, device='cpu', lr=lr)
 
-n_episode = 300
-replay_size = 200
-total_reward_episode = q_learning(env, estimator, n_episode, replay_size, n_action, memory, epsilon=0.1)
+n_episode = 1000
+replay_size = 500
+total_reward_episode = q_learning(env, estimator, n_episode, replay_size, n_action, memory, gamma=0.8, epsilon=0.1)
+
+estimator.save("breakout/models/saves/qlearn/trained_model.pth")
 
 plt.plot(total_reward_episode, 'b.')
 plt.title('Зависимсоть вознаграждения в эпизоде от времени')

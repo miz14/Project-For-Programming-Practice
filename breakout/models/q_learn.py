@@ -33,6 +33,8 @@ class Estimator():
             model = nn.Sequential(
                 nn.Linear(n_state, n_hidden),
                 nn.ReLU(),
+                # nn.Linear(n_hidden, n_hidden),
+                # nn.ReLU(),
                 nn.Linear(n_hidden, 1)
             )
             self.models.append(model)
@@ -92,6 +94,17 @@ class Estimator():
             with torch.no_grad():
                 return torch.tensor([model(torch.tensor(s).float())
                                 for model in self.models])
+            
+    def save(self, path):
+        state_dict = {'models': [model.state_dict() for model in self.models],
+                        'optimizers': [optimizer.state_dict() for optimizer in self.optimizers]}
+        torch.save(state_dict, path)
+
+    def load(self, path):
+        state_dict = torch.load(path)
+        for model, optimizer, saved_model_state, saved_optimizer_state in zip(self.models, self.optimizers, state_dict['models'], state_dict['optimizers']):
+            model.load_state_dict(saved_model_state)
+            optimizer.load_state_dict(saved_optimizer_state)
 
 
 def q_learning(env, estimator, n_episode, replay_size, n_action, memory, gamma=1.0, epsilon=0.1, epsilon_decay=.99):
