@@ -17,6 +17,8 @@ class Breakout:
         self.brick_size = (6, 8)
         self.ball_coords = {'x': (93, 189), 'y': (8, 152)}
         self.board_coords = {'x': (189, 193), 'y': (8, 152)}
+        self.current_state = None
+
         self.lives = None
 
     def get_features(self, img):
@@ -111,7 +113,8 @@ class Breakout:
         next_img, reward, is_done, trancation, info =  self.env.step(1)
         self.lives = info['lives']
         state = self.get_features(next_img)
-        return state, next_img, info
+        self.current_state = state
+        return self.current_state + self.current_state, next_img, info
   
     def step(self, action):
         if action > 0:
@@ -122,6 +125,9 @@ class Breakout:
             self.lives -= 1
             # reward -= 10
         next_state = self.get_features(next_img)
+
+        next_state, self.current_state = next_state + self.current_state, next_state
+
         return next_state, reward, is_done, trancation, next_img, info
 
 memory = deque(maxlen=1000)
@@ -132,9 +138,9 @@ state, img, info = env.reset()
 n_action = env.action_space
 
 n_feature = 100
-n_hidden = 40
+n_hidden = 30
 lr = 1e-4
-estimator = Estimator(n_feature, n_hidden, n_state=3, n_action=3, device='cpu', lr=lr)
+estimator = Estimator(n_feature, n_hidden, n_state=6, n_action=3, device='cpu', lr=lr)
 
 n_episode = 1000
 replay_size = 500
