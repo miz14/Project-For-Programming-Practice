@@ -42,8 +42,8 @@ class Breakout:
         # Если нет шара
         if len(contours) == 0:
             # -1, 72
-            features_vector.append(-1)
             features_vector.append(72)
+            features_vector.append(-1)
         
         else:
 
@@ -119,24 +119,25 @@ class Breakout:
         next_img, reward, is_done, trancation, info =  self.env.step(action)
         if info['lives'] < self.lives:
             next_img, reward, is_done, trancation, info =  self.env.step(1)
-            reward -= 10
+            self.lives -= 1
+            # reward -= 10
         next_state = self.get_features(next_img)
         return next_state, reward, is_done, trancation, next_img, info
 
-memory = deque(maxlen=1000)
+memory = deque(maxlen=300)
 
 env = Breakout()
 state, img, info = env.reset()
 
 n_action = env.action_space
 
-n_feature = 2
-n_hidden = 50
+n_feature = 100
+n_hidden = 10
 lr = 1e-5
 estimator = Estimator(n_feature, n_hidden, n_state=3, n_action=3, device='cpu', lr=lr)
 
-n_episode = 3
-replay_size = 2
+n_episode = 300
+replay_size = 200
 total_reward_episode = q_learning(env, estimator, n_episode, replay_size, n_action, memory, epsilon=0.1)
 
 plt.plot(total_reward_episode, 'b.')
