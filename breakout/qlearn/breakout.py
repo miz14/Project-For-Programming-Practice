@@ -1,9 +1,5 @@
-from collections import deque
-import gym
-import numpy as np
-import matplotlib.pyplot as plt
-from q_learn import Estimator, q_learning
 import cv2
+import gym
 
 class Breakout:
 
@@ -92,6 +88,7 @@ class Breakout:
             contour = contours[0]
 
         x, y, width, height = cv2.boundingRect(contour)
+        # print(x, width)
 
         # Если доска видна не полностью
         if width < 16:
@@ -129,27 +126,3 @@ class Breakout:
         next_state, self.current_state = next_state + self.current_state, next_state
 
         return next_state, reward, is_done, trancation, next_img, info
-
-memory = deque(maxlen=1000)
-
-env = Breakout()
-state, img, info = env.reset()
-
-n_action = env.action_space
-
-n_feature = 100
-n_hidden = 30
-lr = 1e-4
-estimator = Estimator(n_feature, n_hidden, n_state=6, n_action=3, device='cpu', lr=lr)
-
-n_episode = 1000
-replay_size = 500
-total_reward_episode = q_learning(env, estimator, n_episode, replay_size, n_action, memory, gamma=0.8, epsilon=0.1)
-
-estimator.save("breakout/models/saves/qlearn/trained_model.pth")
-
-plt.plot(total_reward_episode, 'b.')
-plt.title('Зависимсоть вознаграждения в эпизоде от времени')
-plt.xlabel('Эпизод')
-plt.ylabel('Полное вознаграждение')
-plt.show()

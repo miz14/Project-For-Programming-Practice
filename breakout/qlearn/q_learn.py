@@ -1,11 +1,7 @@
 import random
 import torch
-import math
 from torch.autograd import Variable
 import torch.nn as nn
-import gym
-import matplotlib.pyplot as plt
-from tqdm import tqdm
 
 # from main import memory, total_reward_episode
 
@@ -33,9 +29,9 @@ class Estimator():
             model = nn.Sequential(
                 nn.Linear(n_state, n_hidden),
                 nn.ReLU(),
-                # nn.Linear(n_hidden, n_hidden),
-                # nn.ReLU(),
-                nn.Linear(n_hidden, 1)
+                nn.Linear(n_hidden, n_hidden // 2),
+                nn.ReLU(),
+                nn.Linear(n_hidden // 2, 1)
             )
             self.models.append(model)
             optimizer = torch.optim.Adam(model.parameters(), lr)
@@ -122,7 +118,7 @@ def q_learning(env, estimator, n_episode, replay_size, n_action, memory, gamma=1
         """
         total_reward_episode = [0] * n_episode
 
-        for episode in tqdm(range(n_episode)):
+        for episode in range(n_episode):
             policy = gen_epsilon_greedy_policy(estimator,
                             epsilon * epsilon_decay ** episode,
                             n_action)
@@ -130,6 +126,7 @@ def q_learning(env, estimator, n_episode, replay_size, n_action, memory, gamma=1
             is_done = False
             # step = 0
             lives = 5
+            best_reward = 20
             while not is_done:
                 action = policy(state)
                 # print(action)
@@ -157,6 +154,11 @@ def q_learning(env, estimator, n_episode, replay_size, n_action, memory, gamma=1
                 td_target = reward + gamma * torch.max(q_values_next)
                 memory.append((state, action, td_target))
                 state = next_state
+            print(episode, total_reward_episode[episode])
+            if total_reward_episode[episode] > best_reward:
+                estimator.save("breakout/models/saves/qlearn/this1.pth")
+                best_reward = total_reward_episode[episode]
+                print("add")
                 
             replay_data = random.sample(memory, min(replay_size, len(memory)))
             for state, action, td_target in replay_data:
