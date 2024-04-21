@@ -1,0 +1,10 @@
+numpy
+matplotlib
+torch
+opencv-python
+
+pygame
+
+gym
+gym[atari]
+autorom[accept-rom-license]
