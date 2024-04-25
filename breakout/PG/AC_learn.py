@@ -9,6 +9,7 @@ import torch
 from collections import deque
 import random
 
+print(torch.cuda.is_available())
 torch.set_default_device('cuda')
 
 # env = Breakout()
@@ -90,9 +91,9 @@ class Breakout:
 
 
 
-# env = Breakout(resize=(84, 84), frame_skip=3)
+env = Breakout(resize=(82, 82), frame_skip=3)
 
-env = FrameStack(AtariPreprocessing(gym.make('BreakoutNoFrameskip-v4'), screen_size=84), 4)
+# env = FrameStack(AtariPreprocessing(gym.make('BreakoutNoFrameskip-v4'), screen_size=82), 4)
 
 # fig, ax = plt.subplots(1, 2, dpi=150)
 
@@ -145,11 +146,11 @@ env = FrameStack(AtariPreprocessing(gym.make('BreakoutNoFrameskip-v4'), screen_s
 #     plt.show()
 
 
-# n_state = env.n_state
-# n_action = env.n_action
+n_state = env.n_state
+n_action = env.n_action
 
-n_state = env.observation_space.shape
-n_action = env.action_space.n 
+# n_state = env.observation_space.shape
+# n_action = env.action_space.n 
 
 
 # n_hidden = [32, 16]
@@ -162,12 +163,12 @@ n_action = env.action_space.n
 
 # total_reward_episode = re(env, policy_net, n_episode, gamma)
 
-lr = 1e-4
+lr = 1e-6
 policy_net = PolicyNetwork(n_state, n_action, lr)
 
 gamma = 0.9
 
-n_episode = 1000
+n_episode = 10000
 total_reward_episode = reinforce(env, policy_net, n_episode, gamma)
 
 

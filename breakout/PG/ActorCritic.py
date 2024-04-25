@@ -115,13 +115,14 @@ class PolicyNetworkModel(nn.Module):
         super(PolicyNetworkModel, self).__init__()
 
         self.relu = nn.ReLU()
-        self.conv2d_1 = nn.Conv2d(n_state[0], 32, 8, 4) 
+        self.conv2d_1 = nn.Conv2d(n_state[0], 32, 3, 2) 
 
-        self.conv2d_2 = nn.Conv2d(32, 16, 8, 4)
+        self.conv2d_2 = nn.Conv2d(32, 16, 4, 2)
 
-        self.linear_1 = nn.Linear(16 * 4 * 4, 64)
+        self.linear_1 = nn.Linear(16 * 19 * 19, 60)
+        self.linear_2 = nn.Linear(60, 20)
 
-        self.linear_2 = nn.Linear(64, n_action)
+        self.linear_3 = nn.Linear(20, n_action)
         self.softmax = nn.Softmax()
 
     def forward(self, x):
@@ -129,9 +130,12 @@ class PolicyNetworkModel(nn.Module):
         x = self.relu(self.conv2d_1(x)) # [16, 20, 20]
         # print(x.shape)
         x = self.relu(self.conv2d_2(x)) # [32, 4, 4]
+        # print(x.shape)
+        # err
         x = x.view(-1)
         x = self.relu(self.linear_1(x))
-        return self.softmax(self.relu(self.linear_2(x)))
+        x = self.relu(self.linear_2(x))
+        return self.softmax(self.relu(self.linear_3(x)))
 
 
 
@@ -232,6 +236,7 @@ class PolicyNetwork():
 #         # print(episode, total_reward_episode[episode])
 def reinforce(env, estimator, n_episode, gamma=1.0):
     total_reward_episode = [0] * n_episode
+    best_reward = 15
     for episode in range(n_episode):
         log_probs = []
         rewards = []
@@ -268,6 +273,10 @@ def reinforce(env, estimator, n_episode, gamma=1.0):
                 break
 
             state = next_state
+        if total_reward_episode[episode] > best_reward:
+            estimator.save('breakout/PG/models/model.pth')
+            best_reward = total_reward_episode[episode]
+            print('save')
     return total_reward_episode
 
 # import os
