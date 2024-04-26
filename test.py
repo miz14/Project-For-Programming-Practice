@@ -18,7 +18,6 @@ torch.manual_seed(args.seed)
 torch.backends.cudnn.deterministic = args.torch_deterministic
 
 device = torch.device("cuda" if torch.cuda.is_available() and args.cuda else "cpu")
-# env setup
 envs = gym.vector.SyncVectorEnv(
     [make_env(args.env_id, i, args.capture_video, run_name) for i in range(args.num_envs)],
 )
@@ -30,7 +29,6 @@ agent.load_state_dict(checkpoint['agent_state_dict'])
 
 next_obs, _ = envs.reset(seed=args.seed)
 print(next_obs)
-er
 next_done = False
 while True:
     action, logprob, _, value = agent.get_action_and_value(torch.Tensor(next_obs).to(device))
