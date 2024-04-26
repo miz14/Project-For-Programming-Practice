@@ -29,7 +29,8 @@ agent = Agent(envs).to(device)
 agent.load_state_dict(checkpoint['agent_state_dict'])
 
 next_obs, _ = envs.reset(seed=args.seed)
-
+print(next_obs)
+er
 next_done = False
 while True:
     action, logprob, _, value = agent.get_action_and_value(torch.Tensor(next_obs).to(device))
