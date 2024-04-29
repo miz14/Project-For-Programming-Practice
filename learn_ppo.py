@@ -20,6 +20,7 @@ torch.manual_seed(args.seed)
 torch.backends.cudnn.deterministic = args.torch_deterministic
 
 device = torch.device("cuda" if torch.cuda.is_available() and args.cuda else "cpu")
+print(device)
 envs = gym.vector.SyncVectorEnv(
     [make_env(args.env_id, i, args.capture_video, run_name) for i in range(args.num_envs)],
 )
@@ -40,6 +41,7 @@ next_obs, _ = envs.reset(seed=args.seed)
 next_obs = torch.Tensor(next_obs).to(device)
 next_done = torch.zeros(args.num_envs).to(device)
 total_reward = []
+best_reward = 20
 for iteration in range(1, args.num_iterations + 1):
     if args.anneal_lr:
         frac = 1.0 - (iteration - 1.0) / args.num_iterations
@@ -66,7 +68,8 @@ for iteration in range(1, args.num_iterations + 1):
             for info in infos["final_info"]:
                 if info and "episode" in info:
                     episode_reward = info['episode']['r']
-                    if info['episode']['r'] >= 20:
+                    if info['episode']['r'] >= best_reward:
+                        best_reward = info['episode']['r']
                         checkpoint = {
                                             'agent_state_dict': agent.state_dict(),
                                             'optimizer_state_dict': optimizer.state_dict(),

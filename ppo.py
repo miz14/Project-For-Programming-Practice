@@ -21,16 +21,16 @@ class Args:
     exp_name: str = os.path.basename(__file__)[: -len(".py")]
     seed: int = 1
     torch_deterministic: bool = True
-    cuda: bool = False
+    cuda: bool = True
     track: bool = False
     wandb_project_name: str = "cleanRL"
     wandb_entity: str = None
     capture_video: bool = True
 
     env_id: str = "BreakoutNoFrameskip-v4"
-    total_timesteps: int = 500000
+    total_timesteps: int = 1000000
     learning_rate: float = 2.5e-4
-    num_envs: int = 1
+    num_envs: int = 1 #8
     num_steps: int = 128
     anneal_lr: bool = True
     gamma: float = 0.99
@@ -54,7 +54,7 @@ def make_env(env_id, idx, capture_video, run_name):
     def thunk():
         if capture_video:
             env = gym.make(env_id, render_mode="rgb_array_list")
-            env = gym.wrappers.RecordVideo(env, f"videos/{run_name}")
+            env = gym.wrappers.RecordVideo(env, f"videos/{run_name}", episode_trigger=lambda x: x % 2 == 0)
         else:
             env = gym.make(env_id)
         env = gym.wrappers.RecordEpisodeStatistics(env)
