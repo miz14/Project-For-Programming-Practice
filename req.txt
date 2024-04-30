@@ -8,3 +8,6 @@ pygame
 gym
 gym[atari]
 autorom[accept-rom-license]
+stable_baselines3
+
+moviepy
