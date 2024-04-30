@@ -1,6 +1,6 @@
 import random
 import time
-import gymnasium as gym
+import gym
 from matplotlib import pyplot as plt
 import numpy as np
 import torch

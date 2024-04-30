@@ -1,7 +1,7 @@
 import os
 from dataclasses import dataclass
 from moviepy import *
-import gymnasium as gym
+import gym
 import numpy as np
 import torch
 import torch.nn as nn
@@ -25,7 +25,7 @@ class Args:
     track: bool = False
     wandb_project_name: str = "cleanRL"
     wandb_entity: str = None
-    capture_video: bool = False
+    capture_video: bool = True
 
     env_id: str = "BreakoutNoFrameskip-v4"
     total_timesteps: int = 1000000
