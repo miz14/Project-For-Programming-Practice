@@ -6,7 +6,8 @@
 
 
 <p align="center">
-<img src="https://www.gymlibrary.dev/_images/breakout.gif" width="300" height="400" p>
+<img src="https://www.gymlibrary.dev/_images/breakout.gif" width="300" height="400"/>
+</p>
 
 ## Описание
 
@@ -63,7 +64,9 @@ Q - обучение с аппроксимацией функции нейрон
 
 С вероятностью $0.95$ матожидание лежит в интервале $[ 15.23, 19.47]$
 
-<center><img src="content/output_24.gif" width="300" height="400"/></center>
+<p align="center">
+<img src="content/output_24.gif" width="300" height="400"/>
+</p>
 
 
 ## Результат эксперимента для второй модели (20)
@@ -77,7 +80,9 @@ Q - обучение с аппроксимацией функции нейрон
 
 С вероятностью $0.95$ матожидание лежит в интервале $[ 15.25, 18.92]$
 
-<center><img src="content/output_20.gif" width="300" height="400"/></center>
+<p align="center">
+<img src="content/output_20.gif" width="300" height="400"/>
+</p>
 
 # Policy based (PG)
 
@@ -86,7 +91,9 @@ Q - обучение с аппроксимацией функции нейрон
 Для ускорения процесса обучения добавлена возможность паралельного выполнения нескольких игр. Их результаты объединяются в батч и подаются на обучение.
 
 Получившиеся модели являются результатом параллельного обучения 8 игр в течении 40 минут
-<center><img src='content/PG_learn.jpg' height='300'/></center>
+<p align="center">
+<img src='content/PG_learn.jpg' height='300'/>
+</p>
 
 По графику видно, что результаты обучения постепенно увеличиваются
 
@@ -101,8 +108,9 @@ Q - обучение с аппроксимацией функции нейрон
 
 С вероятностью $0.95$ матожидание лежит в интервале $[ 12.24, 13.86]$
 
-<center><img src="content/full.gif" width="300" height="400"/></center>
-
+<p align="center">
+<img src="content/full.gif" width="300" height="400"/>
+</p>
 
 ## Результат эксперимента для второй модели (.41)
 
@@ -115,4 +123,6 @@ Q - обучение с аппроксимацией функции нейрон
 
 С вероятностью $0.95$ матожидание лежит в интервале $[ 12.24, 13.86]$
 
-<center><img src="content/41.gif" width="300" height="400"/></center>
+<p align="center">
+<img src="content/41.gif" width="300" height="400"/>
+</p>
