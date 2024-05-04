@@ -1,4 +1,4 @@
-import gym
+import gymnasium as gym
 import torch.nn as nn
 
 from stable_baselines3.common.atari_wrappers import (

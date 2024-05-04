@@ -35,8 +35,6 @@ optimizer = optim.Adam(q_network.parameters(), lr=args.learning_rate)
 target_network = QNetwork(envs).to(device)
 target_network.load_state_dict(q_network.state_dict())
 
-print(envs.single_observation_space)
-
 rb = ReplayBuffer(
     args.buffer_size,
     envs.single_observation_space,
@@ -68,13 +66,13 @@ for global_step in range(args.total_timesteps):
                 if episode_reward >= best_reward:
                     best_reward = episode_reward
                     checkpoint = {
-                                        'target_network_state_dict': target_network.state_dict(),
+                                        'target_network_state_dict': q_network.state_dict(),
                                         'optimizer_state_dict': optimizer.state_dict(),
                                 }
                     torch.save(checkpoint, f'models/target_network_checkpoint_{episode_reward}.pth')
 
                 total_reward.append(episode_reward)
-                print(f"global_step={global_step}, episodic_return={info['episode']['r']}")
+                print(f"global_step={global_step}, episodic_return={int(info['episode']['r'])}")
 
     # TRY NOT TO MODIFY: save data to reply buffer; handle `final_observation`
     real_next_obs = next_obs.copy()
@@ -111,7 +109,13 @@ for global_step in range(args.total_timesteps):
                     args.tau * q_network_param.data + (1.0 - args.tau) * target_network_param.data
                 )
 
+
+
 if args.save_model:
+    checkpoint = {
+        'target_network_state_dict': q_network.state_dict(),
+        'optimizer_state_dict': optimizer.state_dict(),
+    }
     torch.save(checkpoint, f'models/target_network_full.pth')
 envs.close()
 plt.plot(total_reward)
