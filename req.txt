@@ -5,6 +5,7 @@ opencv-python
 
 pygame
 
+gymnasium[all]
 gym
 gym[atari]
 autorom[accept-rom-license]
