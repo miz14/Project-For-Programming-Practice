@@ -1,3 +1,4 @@
+from typing import Any, Mapping
 import gymnasium as gym
 import torch.nn as nn
 
@@ -52,6 +53,9 @@ class QNetwork(nn.Module):
 
     def forward(self, x):
         return self.network(x / 255.0)
+
+    def load_state_dict(self, state_dict: Mapping[str, Any], strict: bool = True, assign: bool = False):
+        return super().load_state_dict(state_dict, strict, assign)
 
 
 def linear_schedule(start_e: float, end_e: float, duration: int, t: int):

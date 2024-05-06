@@ -26,7 +26,6 @@ class Args:
     hf_entity: str = ""
     """the user or org name of the model repository from the Hugging Face Hub"""
 
-    # Algorithm specific arguments
     env_id: str = "BreakoutNoFrameskip-v4"
     """the id of the environment"""
     total_timesteps: int = 10000000
@@ -35,7 +34,7 @@ class Args:
     """the learning rate of the optimizer"""
     num_envs: int = 1
     """the number of parallel game environments"""
-    buffer_size: int = 1000000
+    buffer_size: int = 100000
     """the replay memory buffer size"""
     gamma: float = 0.99
     """the discount factor gamma"""
